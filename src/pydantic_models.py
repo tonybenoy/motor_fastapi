@@ -1,7 +1,8 @@
+from decimal import Decimal
 from typing import List
+
 from bson import ObjectId
 from pydantic import BaseModel, Field
-from decimal import Decimal
 
 
 class PyObjectId(ObjectId):

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
+
+from .db import close_db, get_db_conn
 from .routes import router
-from .db import get_db_conn, close_db
 
 app = FastAPI()
 app.include_router(router)

@@ -1,5 +1,6 @@
-from motor.motor_asyncio import AsyncIOMotorClient
 import os
+
+from motor.motor_asyncio import AsyncIOMotorClient
 
 
 class DataBase:
@@ -18,4 +19,4 @@ async def close_db():
 
 
 async def get_database() -> AsyncIOMotorClient:
-    return db.client
+    return db.client["sample_training"]
