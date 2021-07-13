@@ -6,9 +6,13 @@ from starlette.responses import JSONResponse
 
 from .db import get_database
 from .pydantic_models import AllClasses, AllStudents
-from .utils import (create_aliased_response, get_student_details,
-                    get_student_grades, get_student_in_a_class,
-                    get_total_marks)
+from .utils import (
+    create_aliased_response,
+    get_student_details,
+    get_student_grades,
+    get_student_in_a_class,
+    get_total_marks,
+)
 
 router = APIRouter()
 
@@ -170,7 +174,8 @@ async def student_course(
         ],
         class_id=class_id,
     )
-
+    if not grades:
+        return JSONResponse({})
     resp = {
         "class_id": grades[0]["class_id"],
         "student_id": grades[0]["student_id"],
