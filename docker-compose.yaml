@@ -1,0 +1,13 @@
+version: "3"
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: localhost:5000/tony/studentep
+    network_mode: host
+    volumes:
+      - type: bind
+        source: ./src
+        target: /src
+    command: "gunicorn -b 0.0.0.0:8000 src.main:app -w 1 -k uvicorn.workers.UvicornWorker --preload"
