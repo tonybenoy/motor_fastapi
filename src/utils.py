@@ -1,11 +1,10 @@
-from typing import Any, Dict, List
+from itertools import groupby
+from typing import Any, Dict, List, Optional
 
 from fastapi.encoders import jsonable_encoder
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
 from starlette.responses import JSONResponse
-
-from itertools import groupby
 
 
 def create_aliased_response(model: BaseModel, by_alias: bool = False) -> JSONResponse:
@@ -31,19 +30,22 @@ async def get_student_in_a_class(db: AsyncIOMotorClient, class_id: int) -> List[
 
 
 async def get_student_grades(
-    db: AsyncIOMotorClient, student_ids: List[int]
+    db: AsyncIOMotorClient, student_ids: List[int], class_id: Optional[int] = None
 ) -> List[Dict[str, Any]]:
-    return [
-        stu async for stu in db["students"].find({"student_id": {"$in": student_ids}})
-    ]
+    filters: Dict[str, Any] = (
+        {"student_id": {"$in": student_ids}}
+        if not class_id
+        else {"student_id": {"$in": student_ids}, "class_id": class_id}
+    )
+    return [stu async for stu in db["grades"].find(filters)]
 
 
 def get_total_marks(data: List[Dict[str, Any]], by: str) -> List[Dict[str, int]]:
     resp = []
-    for _, value in groupby(data, lambda x: x[by]):
+    for key, value in groupby(data, lambda x: x[by]):
         total = 0
         for k in value:
             for item in k["scores"]:
-                total = total + item["score"]
-                resp.append({by: k[by], "total_marks": total})
+                total = total + int(item["score"])
+        resp.append({by: key, "total_marks": total})
     return resp
