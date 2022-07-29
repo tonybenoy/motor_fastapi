@@ -40,7 +40,7 @@ jupyterlab-server==2.6.1
 jupyterlab-widgets==1.0.0
 MarkupSafe==2.0.1
 matplotlib-inline==0.1.2
-mistune==0.8.4
+mistune==2.0.3
 motor==2.4.0
 mypy==0.910
 mypy-extensions==0.4.3
